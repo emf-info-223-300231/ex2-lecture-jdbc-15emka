@@ -103,7 +103,7 @@ public class DbWorker implements DbWorkerItf {
 
     @Override
     public Personne suivantPersonne() throws MyDBException {
-        if(index != listePersonnes.size()){
+        if(index < listePersonnes.size()-1){
             index++;
         }
         return listePersonnes.get(index);
