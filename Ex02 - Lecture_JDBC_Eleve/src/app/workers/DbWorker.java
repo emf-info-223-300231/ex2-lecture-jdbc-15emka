@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DbWorker implements DbWorkerItf {
 
@@ -27,9 +29,9 @@ public class DbWorker implements DbWorkerItf {
         final String user = "root";
         final String password = "emf123";
 
-        System.out.println("url:" + url_remote);
+        System.out.println("url:" + url_local);
         try {
-            dbConnexion = DriverManager.getConnection(url_remote, user, password);
+            dbConnexion = DriverManager.getConnection(url_local, user, password);
         } catch (SQLException ex) {
             throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
         }
@@ -72,21 +74,39 @@ public class DbWorker implements DbWorkerItf {
 
     public List<Personne> lirePersonnes() throws MyDBException {
         listePersonnes = new ArrayList<>();
-        
+        try {
+            Statement st = dbConnexion.createStatement();
+            ResultSet rs =
+                    st.executeQuery("select Nom, Prenom from t_personne");
+
+            while (rs.next()) {
+                Personne newPersonne = new Personne(rs.getString("Nom"), rs.getString("Prenom"));
+                listePersonnes.add(newPersonne);
+            }
+        } catch (SQLException ex) {
+            throw new MyDBException(SystemLib.getFullMethodName(), ex.getMessage());
+        }
         return listePersonnes;
     }
 
     @Override
     public Personne precedentPersonne() throws MyDBException {
-
-        return null;
+        if(listePersonnes== null){
+            lirePersonnes();
+        }
+        if(index !=0){
+            index--;
+        }
+        return listePersonnes.get(index);
 
     }
 
     @Override
     public Personne suivantPersonne() throws MyDBException {
-
-        return null;
+        if(index != listePersonnes.size()){
+            index++;
+        }
+        return listePersonnes.get(index);
 
     }
 

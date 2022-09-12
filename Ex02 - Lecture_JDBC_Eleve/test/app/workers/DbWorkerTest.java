@@ -3,6 +3,7 @@ package app.workers;
 import app.beans.Personne;
 import app.exceptions.MyDBException;
 import app.helpers.SystemLib;
+import java.io.File;
 import java.util.List;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -27,7 +28,8 @@ public class DbWorkerTest {
     @Test
     public void a0_testerConnecterMYSQL() throws MyDBException {
         System.out.println(SystemLib.getTestCurrentMethod());
-        dbWrk.connecterBdMySQL(DB_NAME);
+        //dbWrk.connecterBdMySQL(DB_NAME);
+        dbWrk.connecterBdAccess("../data/access" + File.separator + "223_personne_1table.accdb");
     }
 
     @Test
